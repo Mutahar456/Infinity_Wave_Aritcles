@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Article</title>
+</head>
+<body>
+    <h1>Add Article</h1>
+    <form id="addArticleForm" enctype="multipart/form-data">
+        <label for="title">Title:</label>
+        <input type="text" id="title" name="title" required><br><br>
+        
+        <label for="shortDescription">Short Description:</label>
+        <input type="text" id="shortDescription" name="shortDescription" required><br><br>
+        
+        <label for="longDescription">Long Description:</label>
+        <textarea id="longDescription" name="longDescription" required></textarea><br><br>
+        
+        <label for="tags">Tags (comma separated):</label>
+        <input type="text" id="tags" name="tags"><br><br>
+        
+        <label for="images">Images:</label>
+        <input type="file" id="images" name="images" multiple><br><br>
+        
+        <label for="videos">Videos:</label>
+        <input type="file" id="videos" name="videos" multiple><br><br>
+        
+        <label for="date">Date:</label>
+        <input type="date" id="date" name="date"><br><br>
+        
+        <label for="time">Time:</label>
+        <input type="time" id="time" name="time"><br><br>
+        
+        <label for="status">Status:</label>
+        <input type="text" id="status" name="status"><br><br>
+        
+        <button type="submit">Add Article</button>
+    </form>
+
+    <script>
+        document.getElementById('addArticleForm').addEventListener('submit', async function(event) {
+            event.preventDefault();
+
+            const formData = new FormData();
+            formData.append('title', document.getElementById('title').value);
+            formData.append('shortDescription', document.getElementById('shortDescription').value);
+            formData.append('longDescription', document.getElementById('longDescription').value);
+            formData.append('tags', document.getElementById('tags').value);
+
+            const imageFiles = document.getElementById('images').files;
+            for (let i = 0; i < imageFiles.length; i++) {
+                formData.append('images', imageFiles[i]);
+            }
+
+            const videoFiles = document.getElementById('videos').files;
+            for (let i = 0; i < videoFiles.length; i++) {
+                formData.append('videos', videoFiles[i]);
+            }
+
+            formData.append('date', document.getElementById('date').value);
+            formData.append('time', document.getElementById('time').value);
+            formData.append('status', document.getElementById('status').value);
+
+            try {
+                const token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY2YTIzZTE0M2JmMjIyZjcyZWUyNDYwYSIsImVtYWlsIjoiYW11dGFoYXNobWk0NjZAZ21haWwuY29tIiwiaWF0IjoxNzIxOTA4NzU2LCJleHAiOjE3MjE5MTIzNTZ9.r04Ahta1QTnWnXxprignyM3xLBQvsd7SpH-CJ5--Jk0';
+
+                const response = await fetch('http://localhost:5000/api/article/add', {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': `Bearer ${token}`,
+                        'Accept': 'application/json'
+                    },
+                    body: formData
+                });
+
+                const result = await response.json();
+                console.log('Response:', result); // Log the result for debugging
+
+                if (response.ok) {
+                    alert('Article added successfully');
+                } else {
+                    alert('Error: ' + (result.error || 'Unknown error'));
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                alert('An error occurred. Please try again.');
+            }
+        });
+    </script>
+</body>
+</html>

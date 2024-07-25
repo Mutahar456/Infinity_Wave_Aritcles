@@ -1,3 +1,4 @@
+const dotenv=require('dotenv').config();
 const express = require('express');
 const connectDB = require('./Configs/mongooseConnection'); // Assuming your database connection code is in 'db.js'
 const adminRoutes = require('./Routes/admin');
